@@ -1,8 +1,9 @@
-from geopy.geocoders import Nominatim
-from geopy.extra.rate_limiter import RateLimiter
-import streamlit as st
-import pandas as pd
 import time
+
+import pandas as pd
+import streamlit as st
+from geopy.extra.rate_limiter import RateLimiter
+from geopy.geocoders import Nominatim
 
 USER_AGENT = "geoconvert"
 
@@ -50,8 +51,8 @@ def process_reverse_geocode(df, batch_size):
     for i in range(0, 100):
         my_bar.progress(i + 1, text=progress_text)
         i = i * batch_size
-        df.loc[i:i + batch_size] = df.loc[i:i + batch_size]
-        df.loc[i:i + batch_size, "location"] = df.apply(reverse_geocode, axis=1)
+        df.loc[i : i + batch_size] = df.loc[i : i + batch_size]
+        df.loc[i : i + batch_size, "location"] = df.apply(reverse_geocode, axis=1)
     time.sleep(1)
     my_bar.progress(100, text="Done!")
 
@@ -75,8 +76,10 @@ if uploaded_file is not None:
             for i in range(0, 100):
                 my_bar.progress(i + 1, text=progress_text)
                 i = i * batch_size
-                dataframe.loc[i:i + batch_size] = dataframe.loc[i:i + batch_size]
-                dataframe.loc[i:i + batch_size, "location"] = dataframe.apply(reverse_geocode, axis=1)
+                dataframe.loc[i : i + batch_size] = dataframe.loc[i : i + batch_size]
+                dataframe.loc[i : i + batch_size, "location"] = dataframe.apply(
+                    reverse_geocode, axis=1
+                )
         except ValueError as e:
             st.write(e)
     elif has_required_columns(dataframe, locations_required_columns):
@@ -86,8 +89,10 @@ if uploaded_file is not None:
             for i in range(0, 100):
                 my_bar.progress(i + 1, text=progress_text)
                 i = i * batch_size
-                dataframe.loc[i:i + batch_size] = dataframe.loc[i:i + batch_size]
-                dataframe.loc[i:i + batch_size, "latitude":"longitude"] = dataframe.apply(geocode_location, axis=1)
+                dataframe.loc[i : i + batch_size] = dataframe.loc[i : i + batch_size]
+                dataframe.loc[i : i + batch_size, "latitude":"longitude"] = (
+                    dataframe.apply(geocode_location, axis=1)
+                )
         except ValueError as e:
             st.write(e)
     else:
